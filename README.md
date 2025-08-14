@@ -1,4 +1,4 @@
-# Practice Groupd for OLAP
+# Practice Ground for OLAP
 
 A **practice ground for OLAP principles** using PostgreSQL. This project helps learners write and experiment with complex **`SELECT` queries** and explore analytical SQL capabilities.
 
@@ -41,6 +41,19 @@ init/
 docker-compose up -d
 ```
 
-Access Superset at: http://localhost:8088
+Access Superset at: http://localhost:8088 with  credentials `admin / admin`
 
-(Default credentials: admin / admin)
+
+### 4. Configure Database
+
+1. Go to `Settings > Database Connections`.
+2. Add Database
+3. Select Postgress with below values
+     - Host: `postgres`
+     - Port: `5432`
+     - Database name: `superset_db`
+     - Username: `superset_user`
+     - Password: `superset_pass`
+     - Click `Connect`
+     - Click `Finish`
+
