@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: superset_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: superset_user
+      POSTGRES_PASSWORD: superset_pass
+      POSTGRES_DB: superset_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset_user -d superset_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  superset:
+    image: apache/superset:latest
+    container_name: superset_app
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SUPERSET_SECRET_KEY: "your_secret_key_here"
+      # Optional: Point Superset's internal metadata DB to PostgreSQL instead of SQLite
+      SUPERSET_DATABASE_URI: postgresql+psycopg2://superset_user:superset_pass@postgres:5432/superset_db
+    ports:
+      - "8088:8088"
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "pip install psycopg2-binary && \
+         superset db upgrade && \
+         superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@superset.com --password admin && \
+         superset init && \
+         superset run -h 0.0.0.0 -p 8088"
+      ]
+
+volumes:
+  postgres_data:
