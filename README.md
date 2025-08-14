@@ -33,8 +33,6 @@ init/
   └── my_practice_2.sql
 ```
 
----
-
 ### 3. Start the Environment
 
 ```bash
